@@ -1120,8 +1120,7 @@ button { font-family: var(--font-h); cursor: pointer; border: none; }
 .btn-submit i { transition: transform var(--t); }
 .btn-submit:hover i { transform: translateX(3px) translateY(-3px) rotate(10deg); }
 
-/* Alerts */
-.form-success,
+/* Inline error alert */
 .form-error {
   display: flex;
   align-items: center;
@@ -1129,18 +1128,44 @@ button { font-family: var(--font-h); cursor: pointer; border: none; }
   padding: 14px 18px;
   border-radius: 9px;
   font-size: 0.88rem;
-}
-.form-success {
-  background: rgba(39,174,96,0.09);
-  border: 1px solid rgba(39,174,96,0.3);
-  color: #1a7a42;
-}
-.form-error {
   background: rgba(193,39,45,0.08);
   border: 1px solid rgba(193,39,45,0.3);
   color: var(--red-dark);
 }
-.form-success i, .form-error i { font-size: 1.2rem; flex-shrink: 0; }
+.form-error i { font-size: 1.2rem; flex-shrink: 0; }
+
+/* Fix: [hidden] attribute gets overridden by display:flex above */
+.form-error[hidden] { display: none !important; }
+
+/* ---- Toast notification (success pop-up) ---- */
+.toast {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: #1e7e3e;
+  color: var(--white);
+  border-radius: 10px;
+  font-family: var(--font-h);
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+  white-space: nowrap;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.toast i { font-size: 1.1rem; }
 
 /* =============================================
    FOOTER

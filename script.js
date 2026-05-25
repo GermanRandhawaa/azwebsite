@@ -8,9 +8,8 @@ const navbar      = document.getElementById('navbar');
 const hamburger   = document.getElementById('hamburger');
 const navLinksEl  = document.getElementById('navLinks');
 const backToTopBtn = document.getElementById('backToTop');
-const contactForm  = document.getElementById('contactForm');
-const formSuccess  = document.getElementById('formSuccess');
-const formError    = document.getElementById('formError');
+const contactForm = document.getElementById('contactForm');
+const formError   = document.getElementById('formError');
 
 /* =============================================
    NAVBAR — scroll shadow + active link
@@ -175,6 +174,29 @@ backToTopBtn.addEventListener('click', () => {
 })();
 
 /* =============================================
+   TOAST NOTIFICATION
+   ============================================= */
+function showToast(message) {
+  // Remove any existing toast first
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<i class="fas fa-check-circle"></i><span>${message}</span>`;
+  document.body.appendChild(toast);
+
+  // Animate in (double rAF ensures transition fires)
+  requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+
+  // Animate out after 3.5 s then remove
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 380);
+  }, 3500);
+}
+
+/* =============================================
    CONTACT FORM — Web3Forms submission
    Sends directly to az.broz@outlook.com.
    Get your free key at web3forms.com and paste
@@ -216,11 +238,8 @@ if (contactForm) {
       const result = await response.json();
 
       if (result.success) {
-        // Success
-        formSuccess.hidden = false;
-        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        showToast('Message sent! We\'ll be in touch shortly.');
         contactForm.reset();
-        setTimeout(() => { formSuccess.hidden = true; }, 6000);
       } else {
         // Web3Forms returned an error (e.g. invalid key)
         formError.querySelector('p').textContent =
