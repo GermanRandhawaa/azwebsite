@@ -175,18 +175,20 @@ backToTopBtn.addEventListener('click', () => {
 })();
 
 /* =============================================
-   CONTACT FORM — mailto submission
+   CONTACT FORM — Web3Forms submission
+   Sends directly to az.broz@outlook.com.
+   Get your free key at web3forms.com and paste
+   it into the hidden input in index.html.
    ============================================= */
 if (contactForm) {
-  contactForm.addEventListener('submit', function (e) {
+  contactForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
     const name    = document.getElementById('name').value.trim();
     const email   = document.getElementById('email').value.trim();
-    const phone   = document.getElementById('phone').value.trim();
-    const service = document.getElementById('service').value;
     const message = document.getElementById('message').value.trim();
 
+    // Client-side validation
     if (!name || !email || !message) {
       formError.hidden = false;
       formSuccess.hidden = true;
@@ -196,40 +198,56 @@ if (contactForm) {
 
     formError.hidden = true;
 
-    const subject = `Project Inquiry from ${name} — AZ BROZ Website`;
-    const body = [
-      `Hi AZ BROZ Team,`,
-      ``,
-      `You have a new inquiry submitted through your website.`,
-      ``,
-      `──────────────────────────────`,
-      `Name:    ${name}`,
-      `Email:   ${email}`,
-      `Phone:   ${phone || 'Not provided'}`,
-      `Service: ${service || 'Not specified'}`,
-      `──────────────────────────────`,
-      ``,
-      `Message:`,
-      message,
-      ``,
-      `──────────────────────────────`,
-      `Sent via AZ BROZ Inc. website contact form.`,
-    ].join('\n');
+    // Show loading state on button
+    const btn     = contactForm.querySelector('.btn-submit');
+    const btnText = btn.querySelector('span');
+    const btnIcon = btn.querySelector('i');
+    btnText.textContent = 'Sending…';
+    btnIcon.className   = 'fas fa-spinner fa-spin';
+    btn.disabled        = true;
 
-    window.location.href = `mailto:az.broz@outlook.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    try {
+      const formData = new FormData(contactForm);
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        body:   formData,
+      });
 
-    formSuccess.hidden = false;
-    formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      const result = await response.json();
 
-    setTimeout(() => {
-      contactForm.reset();
-      formSuccess.hidden = true;
-    }, 7000);
+      if (result.success) {
+        // Success
+        formSuccess.hidden = false;
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        contactForm.reset();
+        setTimeout(() => { formSuccess.hidden = true; }, 6000);
+      } else {
+        // Web3Forms returned an error (e.g. invalid key)
+        formError.querySelector('p').textContent =
+          result.message || 'Something went wrong. Please email us directly at az.broz@outlook.com.';
+        formError.hidden = false;
+      }
+    } catch {
+      // Network error
+      formError.querySelector('p').textContent =
+        'Could not send message. Please email us directly at az.broz@outlook.com.';
+      formError.hidden = false;
+    } finally {
+      // Restore button
+      btnText.textContent = 'Send Message';
+      btnIcon.className   = 'fas fa-paper-plane';
+      btn.disabled        = false;
+    }
   });
 
-  contactForm.querySelectorAll('input, textarea').forEach(field => {
+  // Clear error on any input change
+  contactForm.querySelectorAll('input, textarea, select').forEach(field => {
     field.addEventListener('input', () => {
-      if (!formError.hidden) formError.hidden = true;
+      if (!formError.hidden) {
+        formError.hidden = true;
+        formError.querySelector('p').textContent =
+          'Please fill in all required fields before sending.';
+      }
     });
   });
 }

@@ -372,6 +372,12 @@
 
         <div class="contact-form-wrap reveal" style="--d:0.15s">
           <form id="contactForm" class="contact-form" novalidate>
+            <!-- Web3Forms: replace the value below with your key from web3forms.com -->
+            <input type="hidden" name="access_key" value="YOUR-WEB3FORMS-ACCESS-KEY" />
+            <input type="hidden" name="subject" value="New Project Inquiry — AZ BROZ Website" />
+            <input type="hidden" name="from_name" value="AZ BROZ Website" />
+            <!-- Honeypot spam filter -->
+            <input type="checkbox" name="botcheck" style="display:none;" />
             <div class="form-row">
               <div class="form-group">
                 <label for="name">Full Name <span class="req">*</span></label>
@@ -413,7 +419,7 @@
             </button>
             <div id="formSuccess" class="form-success" aria-live="polite" hidden>
               <i class="fas fa-check-circle"></i>
-              <p>Your message is ready! Your email client will open with the pre-filled details — just hit send.</p>
+              <p>Message sent! We'll be in touch with you shortly.</p>
             </div>
             <div id="formError" class="form-error" aria-live="polite" hidden>
               <i class="fas fa-exclamation-circle"></i>
