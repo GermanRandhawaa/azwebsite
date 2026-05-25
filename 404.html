@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting — AZ BROZ Inc.</title>
+
+  <script>
+    (function () {
+      // Map every old URL path → the correct anchor on the new single page
+      var redirectMap = {
+        '/home':          '/#home',
+        '/home.html':     '/#home',
+        '/index.html':    '/',
+        '/services':      '/#services',
+        '/services.html': '/#services',
+        '/about':         '/#about',
+        '/about.html':    '/#about',
+        '/contact':       '/#contact',
+        '/contact.html':  '/#contact',
+      };
+
+      var path = window.location.pathname.replace(/\/+$/, '').toLowerCase();
+      var destination = redirectMap[path] || '/';
+
+      // 301-style permanent redirect via JS (best we can do on a static host)
+      window.location.replace('https://azbroz.com' + destination);
+    })();
+  </script>
+
+  <!-- Non-JS fallback -->
+  <meta http-equiv="refresh" content="0;url=https://azbroz.com/" />
+
+  <style>
+    body { font-family: sans-serif; display: flex; align-items: center;
+           justify-content: center; height: 100vh; margin: 0; background: #2c2c2c; color: #fff; }
+    a { color: #c1272d; }
+  </style>
+</head>
+<body>
+  <p>Redirecting… <a href="https://azbroz.com/">Click here if not redirected.</a></p>
+</body>
+</html>
